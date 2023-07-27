@@ -1,18 +1,27 @@
 let form = document.getElementById('form');
+let list = document.getElementById('items');
 form.addEventListener('submit', onSubmit);
+
+let data = JSON.parse(localStorage.getItem('user'));
+
+data.forEach(ele => {
+    let item = document.createElement('li')
+    item.classList.add("list-group-item");
+    item.append(document.createTextNode(`username:${ele.username} - email:${ele.email}`));
+    list.append(item);
+});
 
 function onSubmit(e){
     e.preventDefault();
+    list.innerHTML = "";
 
     let username = document.getElementById('username').value;
-    let password = document.getElementById('password').value;
+    let email = document.getElementById('email').value;
 
     let user = {
         username,
-        password
+        email
     }
-
-    let data = JSON.parse(localStorage.getItem('user'));
 
     if(!data || data.length === 0){
         data = [user];
@@ -22,5 +31,11 @@ function onSubmit(e){
 
     localStorage.setItem('user', JSON.stringify(data));
 
-    alert("You have successfully registered!");
+
+    data.forEach(ele => {
+        let item = document.createElement('li')
+        item.classList.add("list-group-item");
+        item.append(document.createTextNode(`username:${ele.username} - email:${ele.email}`));
+        list.append(item);
+    });
 }
