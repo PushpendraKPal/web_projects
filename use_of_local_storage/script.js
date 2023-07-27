@@ -11,8 +11,16 @@ function onSubmit(e){
         username,
         password
     }
-    console.log(user);
-    localStorage.setItem('user', JSON.stringify(user));
+
+    let data = JSON.parse(localStorage.getItem('user'));
+
+    if(!data || data.length === 0){
+        data = [user];
+    }else{
+        data.push(user);
+    }
+
+    localStorage.setItem('user', JSON.stringify(data));
 
     alert("You have successfully registered!");
 }
