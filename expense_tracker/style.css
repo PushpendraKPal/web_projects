@@ -1,0 +1,17 @@
+#form{
+    width: 50%;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid gray;
+    margin-top: 20px;
+}
+h1{
+    text-align: center;
+    font-size: 13px;
+    font-weight: bold;
+    color: gray;
+    padding-bottom: 20px;
+}
+.list{
+    margin-top: 50px;
+}
