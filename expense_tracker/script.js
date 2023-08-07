@@ -103,3 +103,5 @@ function edited(index, amount){
     })
     localStorage.setItem("expense", JSON.stringify(data));
 }
+
+
