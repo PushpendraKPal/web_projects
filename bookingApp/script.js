@@ -1,12 +1,15 @@
 // AXIOS
+let Users;
 
 // GET REQUEST
 function getUsers() {
     axios
     .get('https://crudcrud.com/api/dbf119a8baaa4a15b9437f3b8883a43c/user')
     .then(res=>{
+        console.log(res.data);
+        Users = res.data;
         tableBody.innerHTML="";
-        render(res)
+        render(res.data)
     })
     .catch(err=>{
         console.error(err);
@@ -14,10 +17,11 @@ function getUsers() {
   }
   
   // POST REQUEST
-  function addUser(user) {
-    axios.post('https://crudcrud.com/api/dbf119a8baaa4a15b9437f3b8883a43c/user', user)
+  function addUser(data) {
+    axios.post('https://crudcrud.com/api/dbf119a8baaa4a15b9437f3b8883a43c/user', data)
     .then((res)=>{
         getUsers()
+        alert(`${res.data.name} is added`)
     })
     .catch((err)=>{
         console.error(err);
@@ -25,10 +29,11 @@ function getUsers() {
   }
   
   // PUT/PATCH REQUEST
-  function updateUser(id) {
+  function updateUser(data) {
     axios
-    .put(`https://crudcrud.com/api/dbf119a8baaa4a15b9437f3b8883a43c/user/${id}`)
+    .put(`https://crudcrud.com/api/dbf119a8baaa4a15b9437f3b8883a43c/user/${data._id}`, {name:data.name, email:data.email, phone:data.phone,time:data.time})
     .then((res)=>{
+        console.log(res);
         getUsers()
     })
     .catch((err)=>{
@@ -39,7 +44,7 @@ function getUsers() {
   // DELETE REQUEST
   function removeUser(id) {
     axios
-    .put(`https://crudcrud.com/api/dbf119a8baaa4a15b9437f3b8883a43c/user/${id}`)
+    .delete(`https://crudcrud.com/api/dbf119a8baaa4a15b9437f3b8883a43c/user/${id}`)
     .then((res)=>{
         getUsers()
     })
@@ -51,10 +56,10 @@ function getUsers() {
   // DOM
 
     let tableBody = document.getElementById('tableBody');
+    tableBody.addEventListener('click', findUser)
     tableBody.innerHTML="";
     getUsers();
     
-    let user;
     let bookingForm = document.getElementById('bookingForm');
     bookingForm.addEventListener('submit', (event) => {
         event.preventDefault(); 
@@ -67,20 +72,83 @@ function getUsers() {
         document.getElementById('email').value = '';
         document.getElementById('phone').value = '';
         document.getElementById('time').value = '';
-        user = {
+        let user = {
             name,
             email,
             phone,
             time
         };
+        let a = checkMail(Users, email);
+        if(a)
+        addUser(user)
+        else
+        alert("User is already registered with this email")
     });
 
     function render(data){
         data.forEach(ele=>{
             let tr = document.createElement('tr');
-            tr.innerHTML = `<td>${ele.name}</td><td>${ele.email}</td><td>${ele.phone}</td><td>${ele.time}</td><td><button class="btn btn-info">Edit</button><button class="btn btn-danger">Delete</button></td>`
+            tr.innerHTML = `<td>${ele.name}</td><td>${ele.email}</td><td>${ele.phone}</td><td>${ele.time}</td><td><button class="btn btn-info edit mr-2" data-toggle="modal" data-target="#userModal">Edit</button><button class="btn btn-danger delete">Delete</button></td>`
             tableBody.append(tr);
         })
     }
 
+    function checkMail(data, email){
+        let flag = true;
+        data.map(ele=>{
+            if(ele.email === email){
+            flag = false;
+            }
+        })
+        return flag;
+    }
 
+    function findUser(e){
+        let currentUser;
+        if (e.target.classList.contains('delete')){
+            var tr = e.target.parentElement.parentElement;
+            var userEmail = tr.childNodes[1].textContent;
+            Users.forEach(e=>{
+                if(e.email === userEmail){
+                currentUser = e;
+                }
+            })
+        console.log(currentUser._id);
+        removeUser(currentUser._id);
+        }else if (e.target.classList.contains('edit')){
+            var tr = e.target.parentElement.parentElement;
+            var userEmail = tr.childNodes[1].textContent;
+            Users.forEach(e=>{
+                if(e.email === userEmail){
+                currentUser = e;
+                }
+            })
+            document.getElementById('editName').value = currentUser.name;
+            document.getElementById('editEmail').value = currentUser.email;
+            document.getElementById('editPhone').value = currentUser.phone;
+            document.getElementById('editTime').value = currentUser.time;
+
+            let editForm = document.getElementById('editForm');
+            editForm.addEventListener('submit', (e)=>{
+                e.preventDefault();
+
+                const nameE = document.getElementById('editName').value;
+                const emailE = document.getElementById('editEmail').value;
+                const phoneE = document.getElementById('editPhone').value;
+                const timeE = document.getElementById('editTime').value;
+
+                let user = {
+                    _id :currentUser._id,
+                    name :nameE,
+                    email :emailE,
+                    phone :phoneE,
+                    time :timeE
+                }
+                console.log(user);
+                updateUser(user);
+
+                const modal = document.getElementById('userModal');
+                $(modal).modal('hide');
+            })
+        }
+    }
