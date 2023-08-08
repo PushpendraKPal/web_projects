@@ -4,7 +4,7 @@ let Users;
 // GET REQUEST
 function getUsers() {
     axios
-    .get('https://crudcrud.com/api/dbf119a8baaa4a15b9437f3b8883a43c/user')
+    .get('https://crudcrud.com/api/ead76c3ca97a45c2bccdf2b3693b048a/user')
     .then(res=>{
         console.log(res.data);
         Users = res.data;
@@ -18,7 +18,7 @@ function getUsers() {
   
   // POST REQUEST
   function addUser(data) {
-    axios.post('https://crudcrud.com/api/dbf119a8baaa4a15b9437f3b8883a43c/user', data)
+    axios.post('https://crudcrud.com/api/ead76c3ca97a45c2bccdf2b3693b048a/user', data)
     .then((res)=>{
         getUsers()
         alert(`${res.data.name} is added`)
@@ -31,7 +31,7 @@ function getUsers() {
   // PUT/PATCH REQUEST
   function updateUser(data) {
     axios
-    .put(`https://crudcrud.com/api/dbf119a8baaa4a15b9437f3b8883a43c/user/${data._id}`, {name:data.name, email:data.email, phone:data.phone,time:data.time})
+    .put(`https://crudcrud.com/api/ead76c3ca97a45c2bccdf2b3693b048a/user/${data._id}`, {name:data.name, email:data.email, phone:data.phone,time:data.time})
     .then((res)=>{
         console.log(res);
         getUsers()
@@ -44,7 +44,7 @@ function getUsers() {
   // DELETE REQUEST
   function removeUser(id) {
     axios
-    .delete(`https://crudcrud.com/api/dbf119a8baaa4a15b9437f3b8883a43c/user/${id}`)
+    .delete(`https://crudcrud.com/api/ead76c3ca97a45c2bccdf2b3693b048a/user/${id}`)
     .then((res)=>{
         getUsers()
     })
@@ -152,3 +152,4 @@ function getUsers() {
             })
         }
     }
+    console.log(Users);
