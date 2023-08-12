@@ -1,0 +1,10 @@
+#taskDetails{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-column-gap: 20px;
+    padding: 20px;
+}
+tr{
+    display: grid;
+    grid-template-columns: 1.25fr 1.25fr 1fr;
+}
